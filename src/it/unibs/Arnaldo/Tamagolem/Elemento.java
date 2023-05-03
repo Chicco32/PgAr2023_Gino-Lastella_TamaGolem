@@ -7,13 +7,13 @@ public class Elemento {
 	private int[][] equilibrio = new int[NUM_ELEMENTI_MAX][NUM_ELEMENTI_MAX];
 	private int numElementiUsati;
 	//setting della classe
-	public enum tipoElemento {Terra, Aria, Fuoco, Acqua, Etere, Fisico, Veleno, Psiche, Magia, Oscuro};
+	public static enum tipoElemento {Terra, Aria, Fuoco, Acqua, Etere, Fisico, Veleno, Psiche, Magia, Oscuro};
 	public static final int NUM_ELEMENTI_MAX = 10;
 	public static final int MARGINE_DATO = 10;
 	
 	
-	public Elemento(int _NnumElementiUsati) {
-		this.numElementiUsati = _NnumElementiUsati;
+	public Elemento(int _numElementiUsati) {
+		this.numElementiUsati = _numElementiUsati;
 		this.generaEquilibrio();
 	}
 	
