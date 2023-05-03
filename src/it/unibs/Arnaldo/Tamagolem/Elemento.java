@@ -4,15 +4,16 @@ import java.util.Random;
 
 public class Elemento {
 
-	private int[][] equilibrio = new int[NUM_ELEMENTI][NUM_ELEMENTI];
-	
+	private int[][] equilibrio = new int[NUM_ELEMENTI_MAX][NUM_ELEMENTI_MAX];
+	private int numElementiUsati;
 	//setting della classe
 	public enum tipoElemento {Terra, Aria, Fuoco, Acqua, Etere, Fisico, Veleno, Psiche, Magia, Oscuro};
-	public static final int NUM_ELEMENTI = 5;
+	public static final int NUM_ELEMENTI_MAX = 10;
 	public static final int MARGINE_DATO = 10;
 	
 	
-	public Elemento() {
+	public Elemento(int _NnumElementiUsati) {
+		this.numElementiUsati = _NnumElementiUsati;
 		this.generaEquilibrio();
 	}
 	
@@ -33,15 +34,15 @@ public class Elemento {
 	
 	private void generaEquilibrio () {
 		do {
-			for (int numRiga = 0; numRiga <NUM_ELEMENTI - 2; numRiga ++) { //per ogni ciclo genera una riga e la copia nella rispettiva colonna per calcolare le successive
+			for (int numRiga = 0; numRiga <this.numElementiUsati - 2; numRiga ++) { //per ogni ciclo genera una riga e la copia nella rispettiva colonna per calcolare le successive
 				this.setRiga(numRiga);
 				this.setLastElement(numRiga);
 				this.setColonna(numRiga);
 			}
 			//rimane la penultima riga e colonna in cui non ci sono piu elementi random percio non vale avviare un ciclo
-			this.setLastElement(NUM_ELEMENTI - 2);
-			this.setColonna(NUM_ELEMENTI - 2);
-			this.equilibrio[NUM_ELEMENTI - 1][NUM_ELEMENTI - 1] = 0; //rimane solo l'ultimo elemento da settare che dovra valere 0
+			this.setLastElement(this.numElementiUsati - 2);
+			this.setColonna(this.numElementiUsati - 2);
+			this.equilibrio[this.numElementiUsati - 1][this.numElementiUsati - 1] = 0; //rimane solo l'ultimo elemento da settare che dovra valere 0
 		} while (!this.checkFinale());
 	}
 	
@@ -53,7 +54,7 @@ public class Elemento {
 			this.equilibrio [riga][riga] = 0;
 			Random ran = new Random();
 			int i= riga + 1;
-			while(i < NUM_ELEMENTI - 1) {
+			while(i < this.numElementiUsati - 1) {
 				do {
 					this.equilibrio[riga][i] = ran.nextInt(((-1) * MARGINE_DATO), MARGINE_DATO);
 				} while(equilibrio[riga][i] == 0); //controlla che non setti scontri a 0
@@ -67,10 +68,10 @@ public class Elemento {
 	 */
 	private void setLastElement(int riga) {
 		int somma = 0;
-		for (int i = 0; i<NUM_ELEMENTI - 1; i++) {
+		for (int i = 0; i<this.numElementiUsati - 1; i++) {
 			somma = somma +this.equilibrio[riga][i];
 		}
-		this.equilibrio[riga][NUM_ELEMENTI - 1] = somma * (-1);
+		this.equilibrio[riga][this.numElementiUsati - 1] = somma * (-1);
 	}
 	
 	/**
@@ -78,7 +79,7 @@ public class Elemento {
 	 * @param colonna: inidce della riga da settare
 	 */
 	private void setColonna(int colonna) {
-		for (int i = colonna + 1; i < NUM_ELEMENTI; i ++) {
+		for (int i = colonna + 1; i < this.numElementiUsati; i ++) {
 			this.equilibrio[i][colonna] = (-1) * this.equilibrio[colonna][i];
 		}
 	}
@@ -88,20 +89,20 @@ public class Elemento {
 	 * @return false se la matrice non va bene, true se è utilizzaile 
 	 */
 	private boolean checkFinale() {
-		for (int i =0; i < NUM_ELEMENTI - 1; i++) { //siccome controlla ancge che non facciano zero gli scontri finali l'ulitmo elemento non dvee vederlo (è ovvio che sia zero)
-			if (Math.abs(this.equilibrio[i][NUM_ELEMENTI -1]) > Elemento.MARGINE_DATO || this.equilibrio[i][NUM_ELEMENTI -1] == 0) return false;
+		for (int i =0; i < this.numElementiUsati - 1; i++) { //siccome controlla anche che non facciano zero gli scontri finali l'ulitmo elemento non deve vederlo (è ovvio che sia zero)
+			if (Math.abs(this.equilibrio[i][this.numElementiUsati -1]) > Elemento.MARGINE_DATO || this.equilibrio[i][this.numElementiUsati -1] == 0) return false;
 		}
 		return true;
 	}
 	
 	/**
 	 * Stampa l'equilibrio come matrice a fine partita. un valore negativo significa che la freccia ideale punta nella direzione opposta leggendo riga attacca colonna
-	 * @param il numero di elementi usati nella partita in caso di numero variabile di elementi
+	 * @param il numero di elementi usati nella partita in caso di nume
 	 */
 	public void printMatrice(int dimensione) {
 		tipoElemento[] tipi = tipoElemento.values();
 		System.out.print("\t");
-		for (int i=0; i < NUM_ELEMENTI; i++) System.out.print(String.format("%s \t", tipi[i]));
+		for (int i=0; i < dimensione; i++) System.out.print(String.format("%s \t", tipi[i]));
 		System.out.print("\n");
 		for (int i=0; i < dimensione; i++) {
 			System.out.print(String.format("%s \t", tipi[i]));
