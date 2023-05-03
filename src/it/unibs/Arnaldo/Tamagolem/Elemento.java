@@ -4,19 +4,31 @@ import java.util.Random;
 
 public class Elemento {
 
-	public enum tipoElemento {Terra, Aria, Fuoco, Acqua, Etere};
-	public static final int NUM_ELEMENTI = 10;
 	private int[][] equilibrio = new int[NUM_ELEMENTI][NUM_ELEMENTI];
+	
+	//setting della classe
+	public enum tipoElemento {Terra, Aria, Fuoco, Acqua, Etere, Fisico, Veleno, Psiche, Magia, Oscuro};
+	public static final int NUM_ELEMENTI = 5;
 	public static final int MARGINE_DATO = 10;
-	public static final int LOWER_BOUND = (-1) * (MARGINE_DATO)/2;
-	public static final int UPPER_BOUND = (MARGINE_DATO)/2;
 	
 	
-	public Elemento () {
+	public Elemento() {
 		this.generaEquilibrio();
 	}
-	public int[][] getEquilibrio() {
-		return equilibrio;
+	
+	/**
+	 * la funzione che effettivamente ti dice il danno subito dal golem difendente.
+	 * Se i due golem usano pari elemento darà 0.
+	 * Se il difende usa un elemento forte e quello che attacca un elemento debole darà 0.
+	 * 
+	 * @param elementoAttaccante tipoElemento.valueof() dell'elemento del golem che attacca nel turno
+	 * @param elementoDifendente tipoElemento.valueof() dell'elemento del golem che difende nel turno
+	 * @return il valore del danno subito come intero
+	 */
+	public int getDannoSubito(int elementoAttaccante, int elementoDifendente) {
+		int danno = this.equilibrio[elementoAttaccante][elementoDifendente];
+		if (danno > 0) return danno;
+		else return 0;
 	}
 	
 	private void generaEquilibrio () {
@@ -26,22 +38,33 @@ public class Elemento {
 				this.setLastElement(numRiga);
 				this.setColonna(numRiga);
 			}
-			this.setRiga(NUM_ELEMENTI - 2); //rimane la penultima riga e colonna in cui non ci sono piu elementi random
+			//rimane la penultima riga e colonna in cui non ci sono piu elementi random percio non vale avviare un ciclo
 			this.setLastElement(NUM_ELEMENTI - 2);
-			this.equilibrio[NUM_ELEMENTI - 1][NUM_ELEMENTI - 1] = 0; //rimane solo l'ultimo elemento da settare ed è inutile avviare un ciclo sapendo che dovra valere 0
-		}while (!this.checkFinale());
+			this.setColonna(NUM_ELEMENTI - 2);
+			this.equilibrio[NUM_ELEMENTI - 1][NUM_ELEMENTI - 1] = 0; //rimane solo l'ultimo elemento da settare che dovra valere 0
+		} while (!this.checkFinale());
 	}
 	
+	/**
+	 * setta la trinangolare superiore esclusa l'ultima colonna
+	 * @param riga: inidce della riga da settare
+	 */
 	private void setRiga(int riga) {
 			this.equilibrio [riga][riga] = 0;
 			Random ran = new Random();
 			int i= riga + 1;
-			while(i < NUM_ELEMENTI - 1) { //setta la trinagolare superiore esclusa l'ultima colonna}
-				this.equilibrio[riga][i] = ran.nextInt(LOWER_BOUND, UPPER_BOUND);
+			while(i < NUM_ELEMENTI - 1) {
+				do {
+					this.equilibrio[riga][i] = ran.nextInt(((-1) * MARGINE_DATO), MARGINE_DATO);
+				} while(equilibrio[riga][i] == 0); //controlla che non setti scontri a 0
 				i++;
 			}
 	}
 	
+	/**
+	 * crea ad hoc lultimo elemento della riga
+	 * @param riga:inidce della riga da settare
+	 */
 	private void setLastElement(int riga) {
 		int somma = 0;
 		for (int i = 0; i<NUM_ELEMENTI - 1; i++) {
@@ -50,21 +73,38 @@ public class Elemento {
 		this.equilibrio[riga][NUM_ELEMENTI - 1] = somma * (-1);
 	}
 	
+	/**
+	 * copia dalla riga immessa come parametro alla rispettiva colonna tutti i valori
+	 * @param colonna: inidce della riga da settare
+	 */
 	private void setColonna(int colonna) {
 		for (int i = colonna + 1; i < NUM_ELEMENTI; i ++) {
-			this.equilibrio[i][colonna] = this.equilibrio[colonna][i]; //copia dalla riga immessa come parametro alla rispettiva colonna tutti i valori
+			this.equilibrio[i][colonna] = (-1) * this.equilibrio[colonna][i];
 		}
 	}
 	
+	/**
+	 * Controlla che gli elementi finali siano in regola con il valore
+	 * @return false se la matrice non va bene, true se è utilizzaile 
+	 */
 	private boolean checkFinale() {
-		for (int i =0; i < NUM_ELEMENTI; i++) {
-			if (this.equilibrio[i][NUM_ELEMENTI -1] > Elemento.MARGINE_DATO) return false;
+		for (int i =0; i < NUM_ELEMENTI - 1; i++) { //siccome controlla ancge che non facciano zero gli scontri finali l'ulitmo elemento non dvee vederlo (è ovvio che sia zero)
+			if (Math.abs(this.equilibrio[i][NUM_ELEMENTI -1]) > Elemento.MARGINE_DATO || this.equilibrio[i][NUM_ELEMENTI -1] == 0) return false;
 		}
 		return true;
 	}
 	
+	/**
+	 * Stampa l'equilibrio come matrice a fine partita. un valore negativo significa che la freccia ideale punta nella direzione opposta leggendo riga attacca colonna
+	 * @param il numero di elementi usati nella partita in caso di numero variabile di elementi
+	 */
 	public void printMatrice(int dimensione) {
+		tipoElemento[] tipi = tipoElemento.values();
+		System.out.print("\t");
+		for (int i=0; i < NUM_ELEMENTI; i++) System.out.print(String.format("%s \t", tipi[i]));
+		System.out.print("\n");
 		for (int i=0; i < dimensione; i++) {
+			System.out.print(String.format("%s \t", tipi[i]));
 			System.out.print("|");
 			for (int j=0; j<dimensione; j++) {
 				System.out.print(String.format("%d \t", this.equilibrio[i][j]));
