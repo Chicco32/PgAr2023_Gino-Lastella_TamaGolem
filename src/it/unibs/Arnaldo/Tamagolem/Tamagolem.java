@@ -1,43 +1,37 @@
 package it.unibs.Arnaldo.Tamagolem;
 
-import java.util.ArrayList;
+import java.util.Queue;
 
 public class Tamagolem {
 
-	public static final int VITA_INIZIALE = Elemento.MARGINE_DATO * 5;
-	private int vita;
-	private ArrayList<Pietra> slotPietre;
-	private boolean sulCampo;
-	
-	public Tamagolem() {
-		this.vita = Tamagolem.VITA_INIZIALE;
-		this.slotPietre = new ArrayList<>();
-		this.sulCampo = false;
-	}
+    public static final int VITA_MAX = 10;
+    private int vita; 
+    private Queue<Elemento.TipoElemento> pietre;
 
-	public int getVita() {
-		return vita;
-	}
+    public Tamagolem(Queue<Elemento.TipoElemento> pietre) {
+        this.pietre = pietre;
+        this.vita = VITA_MAX;
+    }
 
-	public void setVita(int vita) {
-		this.vita = vita;
-	}
+    /**
+     * Scaglia la pietra in fondo alla coda e la rimette all'inizio
+     * @return la pietra che viene scagliata
+     */
+    public Elemento.TipoElemento scagliaPietra() {
+        Elemento.TipoElemento pietra = pietre.poll();
+        pietre.add(pietra);
+        return pietra;
+    }
 
-	public ArrayList<Pietra> getSlotPietre() {
-		return slotPietre;
-	}
-
-	public void setSlotPietre(ArrayList<Pietra> slotPietre) {
-		this.slotPietre = slotPietre;
-	}
-
-	public boolean isSulCampo() {
-		return sulCampo;
-	}
-
-	public void setSulCampo(boolean sulCampo) {
-		this.sulCampo = sulCampo;
-	}
-	
-	
+    /**
+     * Infligge del danno al golem
+     * @param danno quantità di danno inflitta
+     * @return true se il golem sopravvive al colpo, false altrimenti
+     */
+    public boolean subisciDanno(int danno) {
+        this.vita -= danno;
+        if (this.vita <= 0)
+            return false;
+        return true;
+    }
 }

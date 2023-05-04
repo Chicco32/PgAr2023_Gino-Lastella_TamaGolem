@@ -1,42 +1,38 @@
 package it.unibs.Arnaldo.Tamagolem;
 
-import java.util.ArrayList;
-
 public class Giocatore {
+    
+    private String nome;
+    private int nGolem;
+    private Tamagolem golemAttivo;
 
-	private String nome;
-	private ArrayList<Tamagolem> compagnia;
-	
-	/**
-	 * istanzia un novo giocatore alla partita
-	 * @param nome nome del giocatore
-	 * @param nGolem numero di golem che ogni giocatore possiede
-	 */
-	public Giocatore(String nome, int nGolem) {
-		super();
-		this.nome = nome;
-		this.compagnia = new ArrayList<>();
-		for (int i = 0; i < nGolem; i++) { //per ogni giocatore crea una nuova compagnia e la carica gia col numero di golems
-			this.compagnia.add(new Tamagolem());
-		}
-	}
+    public Giocatore(String nome, int nGolem) {
+        this.nome = nome;
+        this.nGolem = nGolem;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public String getNome() {
+        return this.nome;
+    }
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
+    public void setGolemAttivo(Tamagolem golemAttivo) {
+        this.golemAttivo = golemAttivo;
+    }
 
-	public ArrayList<Tamagolem> getCompagnia() {
-		return compagnia;
-	}
+    public Tamagolem getGolemAttivo() {
+        return this.golemAttivo;
+    }
 
-	public void setCompagnia(ArrayList<Tamagolem> compagnia) {
-		this.compagnia = compagnia;
-	}
-	
-	
-	
+    /**
+     * Rimuove il golem attivo e diminuisce nGolem
+     * @return true se il giocatore ha ancora golem da poter evocare, false altrimenti
+         */
+    public boolean killGolem() {
+        this.golemAttivo = null;
+        this.nGolem--;
+        if(this.nGolem > 0)
+            return true;
+        return false;
+    }
+    
 }

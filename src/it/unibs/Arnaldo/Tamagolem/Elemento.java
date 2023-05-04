@@ -4,16 +4,17 @@ import java.util.Random;
 
 public class Elemento {
 
-	private int[][] equilibrio = new int[NUM_ELEMENTI_MAX][NUM_ELEMENTI_MAX];
+	private int[][] equilibrio;
 	private int numElementiUsati;
 	//setting della classe
-	public static enum tipoElemento {Terra, Aria, Fuoco, Acqua, Etere, Fisico, Veleno, Psiche, Magia, Oscuro};
+	public enum TipoElemento {Terra, Aria, Fuoco, Acqua, Etere, Fisico, Veleno, Psiche, Magia, Oscuro};
 	public static final int NUM_ELEMENTI_MAX = 10;
-	public static final int MARGINE_DATO = 10;
+	private int MARGINE_DATO = Tamagolem.VITA_MAX;
 	
 	
-	public Elemento(int _numElementiUsati) {
-		this.numElementiUsati = _numElementiUsati;
+	public Elemento(int numElementiUsati) {
+		this.numElementiUsati = numElementiUsati;
+		this.equilibrio = new int[this.numElementiUsati][this.numElementiUsati];
 		this.generaEquilibrio();
 	}
 	
@@ -28,8 +29,7 @@ public class Elemento {
 	 */
 	public int getDannoSubito(int elementoAttaccante, int elementoDifendente) {
 		int danno = this.equilibrio[elementoAttaccante][elementoDifendente];
-		if (danno > 0) return danno;
-		else return 0;
+		return danno;
 	}
 	
 	private void generaEquilibrio () {
@@ -56,14 +56,14 @@ public class Elemento {
 			int i= riga + 1;
 			while(i < this.numElementiUsati - 1) {
 				do {
-					this.equilibrio[riga][i] = ran.nextInt(((-1) * MARGINE_DATO), MARGINE_DATO);
+					this.equilibrio[riga][i] = ran.nextInt(((-1) * MARGINE_DATO), MARGINE_DATO + 1);
 				} while(equilibrio[riga][i] == 0); //controlla che non setti scontri a 0
 				i++;
 			}
 	}
 	
 	/**
-	 * crea ad hoc lultimo elemento della riga
+	 * crea ad hoc l'ultimo elemento della riga
 	 * @param riga:inidce della riga da settare
 	 */
 	private void setLastElement(int riga) {
@@ -89,8 +89,8 @@ public class Elemento {
 	 * @return false se la matrice non va bene, true se è utilizzaile 
 	 */
 	private boolean checkFinale() {
-		for (int i =0; i < this.numElementiUsati - 1; i++) { //siccome controlla anche che non facciano zero gli scontri finali l'ulitmo elemento non deve vederlo (è ovvio che sia zero)
-			if (Math.abs(this.equilibrio[i][this.numElementiUsati -1]) > Elemento.MARGINE_DATO || this.equilibrio[i][this.numElementiUsati -1] == 0) return false;
+		for (int i = 0; i < this.numElementiUsati - 1; i++) { //siccome controlla anche che non facciano zero gli scontri finali l'ulitmo elemento non deve vederlo (è ovvio che sia zero)
+			if (Math.abs(this.equilibrio[i][this.numElementiUsati -1]) > MARGINE_DATO || this.equilibrio[i][this.numElementiUsati -1] == 0) return false;
 		}
 		return true;
 	}
@@ -100,7 +100,7 @@ public class Elemento {
 	 * @param il numero di elementi usati nella partita in caso di nume
 	 */
 	public void printMatrice(int dimensione) {
-		tipoElemento[] tipi = tipoElemento.values();
+		TipoElemento[] tipi = TipoElemento.values();
 		System.out.print("\t");
 		for (int i=0; i < dimensione; i++) System.out.print(String.format("%s \t", tipi[i]));
 		System.out.print("\n");
