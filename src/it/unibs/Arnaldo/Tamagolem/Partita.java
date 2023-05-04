@@ -2,11 +2,12 @@ package it.unibs.Arnaldo.Tamagolem;
 
 import java.util.List;
 
+
 public class Partita {
     
     private Giocatore giocatore1;
     private Giocatore giocatore2;
-    private List<Elemento.TipoElemento> sacchetto;
+    private List<Coppia> sacchetto;
 
     public Partita(Giocatore giocatore1, Giocatore giocatore2)  {
         this.giocatore1 = giocatore1;
@@ -20,4 +21,8 @@ public class Partita {
     public String fineScontro() {
         return null;
     }
+    	
+    
+    
 }
+
