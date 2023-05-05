@@ -1,6 +1,8 @@
 package it.unibs.Arnaldo.Tamagolem;
 
+import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Queue;
 
 import it.unibs.fp.mylib.InputDati;
 import it.unibs.fp.mylib.MyMenu;
@@ -29,6 +31,10 @@ public class IOStream {
 		System.out.println(String.format("%s il tuo golem è morto!",nomeGiocatore));
 	}
 	
+	public static void inserimentoInvalido() {
+		System.out.println("Spiacenti, l'inserimento dato non è valido");
+	}
+	
 	/**
 	 * mostra quante pietre ci sono nel sacchetto comune 
 	 * @param sacchetto la lista di coppie pietra e numero di quella pietra
@@ -36,7 +42,7 @@ public class IOStream {
 	public static void mostraSacchetto (List<Coppia> sacchetto) {
 		System.out.println("La lista di possibili elementi in gioco:");
 		for (Coppia coppia: sacchetto) {
-			System.out.println(coppia.toString());
+			if (coppia.getQuantita()>0)System.out.print(coppia.toString());
 		}
 	}
 	
@@ -67,5 +73,32 @@ public class IOStream {
 		default: return true;
 		}
 	}
-		
+	/**
+	 * l'interfaccia da evocare ogni volta che si carica di pietre un nuovo tamagolem quando viene evocato e anche Aggiorna il sacchetto
+	 * @param sacchetto deve riceve il sacchetto comune per mostarrlo
+	 * @param nElementi int del numero di elementi usati nella partita
+	 * @param pietrePerGolem il numero P di pietre che ogni golem deve mangiare
+	 * @param nomeGiocatore il nome di colui che ha evocato il golem e deve dargli in pasto le pietre
+	 * @return una Queue<Elemento.TipoElemento> carica di pietre 
+	 */
+	public static Queue<Elemento.TipoElemento> caricaSlotPietre (List<Coppia> sacchetto, int nElementi, int pietrePerGolem, String nomeGiocatore) {
+		Queue<Elemento.TipoElemento> nuovoSlot = new ArrayDeque<>();
+		String nomeElemento;
+		System.out.println(String.format("%s Ecco le pietre che puoi caricare", nomeGiocatore));
+		for (int i= 0; i < pietrePerGolem; i++) {
+			System.out.println("Pietre Disponibili:");
+			IOStream.mostraSacchetto(sacchetto);
+			System.out.println("\n");
+			boolean valido = false;
+			do {
+				nomeElemento = InputDati.leggiStringaNonVuota("Inserisci il nome dell'elemento");
+				if (Elemento.indiceElemento(nomeElemento) >= nElementi) IOStream.inserimentoInvalido(); // se mette un elemento che è oltre quelli disponibili (tipo magia con 3 elementi) o sbaglia a scrivere lo scarta
+				else if (sacchetto.get(Elemento.indiceElemento(nomeElemento)).getQuantita() == 0) IOStream.inserimentoInvalido(); // se mette un elemento tra quelli disponibili ma la cui quantità è zero va scartato (son finite le pietre)
+				else valido = true;
+			} while (!valido);
+			nuovoSlot.add(Elemento.TipoElemento.valueOf(nomeElemento));
+			sacchetto.get(Elemento.indiceElemento(nomeElemento)).diminuisciQuantita();
+		}
+		return nuovoSlot;
+	}
 }
