@@ -31,6 +31,10 @@ public class Equilibrio {
 		return danno;
 	}
 	
+	public int getNumElementiUsati() {
+		return this.numElementiUsati;
+	}
+	
 	private void generaEquilibrio () {
 		do {
 			for (int numRiga = 0; numRiga <this.numElementiUsati - 2; numRiga ++) { //per ogni ciclo genera una riga e la copia nella rispettiva colonna per calcolare le successive
@@ -61,6 +65,7 @@ public class Equilibrio {
 			}
 	}
 	
+
 	/**
 	 * crea ad hoc l'ultimo elemento della riga
 	 * @param riga:inidce della riga da settare
@@ -98,15 +103,15 @@ public class Equilibrio {
 	 * Stampa l'equilibrio come matrice a fine partita. un valore negativo significa che la freccia ideale punta nella direzione opposta leggendo riga attacca colonna
 	 * @param il numero di elementi usati nella partita in caso di nume
 	 */
-	public void printMatrice(int dimensione) {
+	public void printMatrice() {
 		Elemento.TipoElemento[] tipi = Elemento.TipoElemento.values();
 		System.out.print("\t");
-		for (int i=0; i < dimensione; i++) System.out.print(String.format("%s \t", tipi[i]));
+		for (int i=0; i < this.numElementiUsati; i++) System.out.print(String.format("%s \t", tipi[i]));
 		System.out.print("\n");
-		for (int i=0; i < dimensione; i++) {
+		for (int i=0; i < this.numElementiUsati; i++) {
 			System.out.print(String.format("%s \t", tipi[i]));
 			System.out.print("|");
-			for (int j=0; j<dimensione; j++) {
+			for (int j=0; j < this.numElementiUsati; j++) {
 				System.out.print(String.format("%d \t", this.equilibrio[i][j]));
 			}
 			System.out.println("|");

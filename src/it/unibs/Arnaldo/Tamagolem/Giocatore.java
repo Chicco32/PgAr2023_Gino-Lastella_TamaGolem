@@ -27,10 +27,17 @@ public class Giocatore {
      * Rimuove il golem attivo e diminuisce nGolem
      * @return true se il giocatore ha ancora golem da poter evocare, false altrimenti
          */
-    public boolean killGolem() {
+    public void uccidiGolem() {
         this.golemAttivo = null;
         this.nGolem--;
-        if(this.nGolem > 0)
+    }
+
+    /**
+     * Controlla se il giocatore ha ancora tamagolem da evocare
+     * @return true se il giocatore ha ancora tamagolem, false altrimenti
+     */
+    public boolean hasGolem() {
+        if (this.nGolem > 0)
             return true;
         return false;
     }

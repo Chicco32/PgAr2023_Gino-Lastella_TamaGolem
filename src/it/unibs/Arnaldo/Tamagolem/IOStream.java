@@ -54,13 +54,12 @@ public class IOStream {
 	 * @param elementoDiG2 il nome dell'elemento scagliato da g1
 	 * @param eq serve sapere come funziona l'equilibrio generato in quella partita
 	 */
-	public static void mostraDanni (Giocatore g1, Giocatore g2, String elementoDiG1,String elementoDiG2, Equilibrio eq) {
-		System.out.print(String.format("Il golem di %s lancia %s", g1.getNome(), elementoDiG1));
-		System.out.print(String.format(" mentre il golem di %s lancia %s", g2.getNome(), elementoDiG2));
-		int danno = eq.getDannoSubito(elementoDiG1, elementoDiG2);
+	public static void mostraDanni (String g1, String g2, String elementoDiG1, String elementoDiG2, int danno) {
+		System.out.print(String.format("Il golem di %s lancia %s", g1, elementoDiG1));
+		System.out.print(String.format(" mentre il golem di %s lancia %s", g2, elementoDiG2));
 		if (danno == 0) System.out.println("Essendo gli stessi elementi si annichiliscono!");
-		else if (danno > 0) System.out.println(String.format("Il golem di %s subisce %d", g1.getNome(), danno));
-		else if (danno < 0) System.out.println(String.format("Il golem di %s subisce %d", g2.getNome(), -danno));
+		else if (danno > 0) System.out.println(String.format("Il golem di %s subisce %d danni", g2, danno));
+		else if (danno < 0) System.out.println(String.format("Il golem di %s subisce %d danni", g1, -danno));
 	}
 	
 	public static boolean seiSoddisfatto() {
@@ -101,4 +100,5 @@ public class IOStream {
 		}
 		return nuovoSlot;
 	}
+	
 }
