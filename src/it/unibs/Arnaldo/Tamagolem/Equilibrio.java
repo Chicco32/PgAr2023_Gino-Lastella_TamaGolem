@@ -20,12 +20,14 @@ public class Equilibrio {
 	 * la funzione che effettivamente ti dice il danno subito dal golem difendente.
 	 * Se i due golem usano pari elemento darà 0.
 	 * 
-	 * @param elementoAttaccante tipoElemento.valueof() dell'elemento del golem che attacca nel turno
-	 * @param elementoDifendente tipoElemento.valueof() dell'elemento del golem che difende nel turno
+	 * @param elementoAttaccante il nome dell'elemento del golem che attacca nel turno
+	 * @param elementoDifendente il nome dell'elemento del golem che difende nel turno
 	 * @return il valore del danno subito come intero
 	 */
-	public int getDannoSubito(int elementoAttaccante, int elementoDifendente) {
-		int danno = this.equilibrio[elementoAttaccante][elementoDifendente];
+	public int getDannoSubito(String elementoAttaccante, String elementoDifendente) {
+		int elemento1 = Elemento.indiceElemento(elementoAttaccante); 
+		int elemento2 = Elemento.indiceElemento(elementoDifendente);
+		int danno = this.equilibrio[elemento1][elemento2];
 		return danno;
 	}
 	
