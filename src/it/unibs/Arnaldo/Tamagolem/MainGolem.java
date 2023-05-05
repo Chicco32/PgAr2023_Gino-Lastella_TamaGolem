@@ -1,7 +1,5 @@
 package it.unibs.Arnaldo.Tamagolem;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainGolem {
 
@@ -14,8 +12,11 @@ public class MainGolem {
 			//prima fase dello scontro e generazione delle variabili
 			int numElementiUsati = IOStream.chiediNumeroElementi();
 			Partita partita = new Partita(nomeG1, nomeG2, numElementiUsati);
-			while (!partita.fineScontro())
-				partita.scontro();
+			
+			// seconda fase dello sconntro e effettiva lotta fra i tamagolem
+			while (!partita.fineScontro()) partita.scontro();
+			
+			// terza fase dello scontro e rivelazione finale
 			partita.getEquilibrio().printMatrice();
 			soddisfatto = IOStream.seiSoddisfatto();
 

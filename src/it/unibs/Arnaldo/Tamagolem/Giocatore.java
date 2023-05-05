@@ -24,7 +24,9 @@ public class Giocatore {
     }
 
     /**
-     * Rimuove il golem attivo e diminuisce nGolem
+     * Rimuove il golem attivo e diminuisce di uno nGolem ad indicare che quel golem è rimosso dal gioco.
+     * La funzione inoltre segnala se il giocatore è ancora possibilitato a giocare o meno.
+     * Se nGOlem arriva a zero significa che il giocatore corrispondente non ha piu golem da evocare.
      * @return true se il giocatore ha ancora golem da poter evocare, false altrimenti
          */
     public void uccidiGolem() {
@@ -33,7 +35,7 @@ public class Giocatore {
     }
 
     /**
-     * Controlla se il giocatore ha ancora tamagolem da evocare
+     * Controlla se il giocatore ha ancora tamagolem da evocare.
      * @return true se il giocatore ha ancora tamagolem, false altrimenti
      */
     public boolean hasGolem() {

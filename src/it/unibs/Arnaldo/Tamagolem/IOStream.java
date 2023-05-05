@@ -9,7 +9,7 @@ import it.unibs.fp.mylib.MyMenu;
 
 public class IOStream {
 	
-	//imput del numero di elementi, nome giocatori, mostare il sacchetto, imput pietre da inserire nel golem, mostrare quando muore il golem, mostrare vittoria, mostrare danno
+	//mostrare golem rimasti in gioco, mostare vita dei golem attivi e numero di pietre ancora da caricare nel golem, fare una pausa fra un attacco e l'altro 
 	
 	public static int chiediNumeroElementi () {
 		return InputDati.leggiIntero("Con quanti elementi volete giocare?", 3, 10);
@@ -24,11 +24,11 @@ public class IOStream {
 	}
 	
 	public static void mostraBenvenuto () {
-		System.out.println("Benvenuti in questa nuova lotta fra golem, preparatevi perchè sarà uno scontro memorabile!");
+		System.out.println("Benvenuti in questa nuova lotta fra golem, preparatevi perche' sara' uno scontro memorabile!");
 	}
 	
 	public static void mostraGolemMorto (String nomeGiocatore) {
-		System.out.println(String.format("%s il tuo golem è morto!",nomeGiocatore));
+		System.out.println(String.format("\n%s il tuo golem e' morto!",nomeGiocatore));
 	}
 	
 	public static void inserimentoInvalido() {
@@ -36,7 +36,7 @@ public class IOStream {
 	}
 	
 	/**
-	 * mostra quante pietre ci sono nel sacchetto comune 
+	 * Mostra quante pietre ci sono nel sacchetto comune dei giocatori. 
 	 * @param sacchetto la lista di coppie pietra e numero di quella pietra
 	 */
 	public static void mostraSacchetto (List<Coppia> sacchetto) {
@@ -47,16 +47,17 @@ public class IOStream {
 	}
 	
 	/**
-	 * mostra ai due giocatori cosa effettivamente sta succedendo, anzichè guardare cosa succede fra i golem si calcola lui il danno e lo mostra a schermo
-	 * @param g1 il giocatore attaccante come oggetto
-	 * @param g2 il giocatore difendente come oggetto
+	 * Mostra ai due giocatori cosa effettivamente sta succedendo durante uno scontro fra tamagolem.
+	 * La funzione a seconda del segno di danno mostra quale golem ha subito dei danni nello scontro.
+	 * @param g1 il nome del giocatore attaccante
+	 * @param g2 il nome del giocatore difendente
 	 * @param elementoDiG1 il nome dell'elemento scagliato da g1
-	 * @param elementoDiG2 il nome dell'elemento scagliato da g1
-	 * @param eq serve sapere come funziona l'equilibrio generato in quella partita
+	 * @param elementoDiG2 il nome dell'elemento scagliato da g2
+	 * @param danno il valore positivo negativo o zero del danno di quello scontro come intero
 	 */
 	public static void mostraDanni (String g1, String g2, String elementoDiG1, String elementoDiG2, int danno) {
 		System.out.print(String.format("Il golem di %s lancia %s", g1, elementoDiG1));
-		System.out.print(String.format(" mentre il golem di %s lancia %s", g2, elementoDiG2));
+		System.out.print(String.format(" mentre il golem di %s lancia %s\n", g2, elementoDiG2));
 		if (danno == 0) System.out.println("Essendo gli stessi elementi si annichiliscono!");
 		else if (danno > 0) System.out.println(String.format("Il golem di %s subisce %d danni", g2, danno));
 		else if (danno < 0) System.out.println(String.format("Il golem di %s subisce %d danni", g1, -danno));
@@ -72,8 +73,10 @@ public class IOStream {
 		default: return true;
 		}
 	}
+	
 	/**
-	 * l'interfaccia da evocare ogni volta che si carica di pietre un nuovo tamagolem quando viene evocato e anche Aggiorna il sacchetto
+	 * L'interfaccia da evocare ogni volta che si carica di pietre un nuovo tamagolem quando viene evocato.
+	 * La funzione aggiorna in autonomia il sacchetto di pietre dei giocatori.
 	 * @param sacchetto deve riceve il sacchetto comune per mostarrlo
 	 * @param nElementi int del numero di elementi usati nella partita
 	 * @param pietrePerGolem il numero P di pietre che ogni golem deve mangiare

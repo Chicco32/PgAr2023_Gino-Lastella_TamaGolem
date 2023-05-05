@@ -14,7 +14,7 @@ public class Tamagolem {
     }
 
     /**
-     * Scaglia la pietra in fondo alla coda e la rimette all'inizio
+     * Scaglia la pietra in fondo alla coda e la rimette all'inizio.
      * @return la pietra che viene scagliata
      */
     public Elemento.TipoElemento scagliaPietra() {
@@ -24,7 +24,7 @@ public class Tamagolem {
     }
 
     /**
-     * Infligge del danno al golem
+     * Infligge del danno al golem.
      * @param danno quantità di danno inflitta
      * @return true se il golem sopravvive al colpo, false altrimenti
      */
