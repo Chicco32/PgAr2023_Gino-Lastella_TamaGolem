@@ -10,6 +10,10 @@ public class Giocatore {
         this.nome = nome;
         this.nGolem = nGolem;
     }
+    
+    public int getnGolem() {
+    	return this.nGolem;
+    }
 
     public String getNome() {
         return this.nome;

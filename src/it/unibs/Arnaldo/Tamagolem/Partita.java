@@ -1,5 +1,6 @@
 package it.unibs.Arnaldo.Tamagolem;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -12,6 +13,7 @@ public class Partita {
     private List<Coppia> sacchetto;
     private int nPietre;
     private Equilibrio equilibrio;
+    private int nIterazioni;
     
     public Equilibrio getEquilibrio() {
         return this.equilibrio;
@@ -32,6 +34,7 @@ public class Partita {
         this.giocatore2 = new Giocatore(nomeG2, nGolem);
         this.equilibrio = new Equilibrio(nElementi);        
         this.caricaSacchetto(nElementi, scortaComune);
+        this.nIterazioni = 0;
     }
 
     /**
@@ -55,13 +58,17 @@ public class Partita {
      * Per mostare a video ciò che sta succedendo essa richiama la controparte IOStream mostraDanni ed eventualmente segnala la morte di uno dei due golem attivi nello scontro.
      */
     public void scontro() {
-        if(this.giocatore1.getGolemAttivo() == null)
+        if(this.giocatore1.getGolemAttivo() == null) {
             this.creaGolem(giocatore1);
-        if(this.giocatore2.getGolemAttivo() == null)
+        }
+        if(this.giocatore2.getGolemAttivo() == null) {
             this.creaGolem(giocatore2);
+            if(this.nIterazioni == 0 && this.pariInserimentiSlotTamagolem()) this.evitaPareggioInfinito(); //controlla che la partita non cada in un loop infinto di pareggi
+        }
         Elemento.TipoElemento pietraG1 = this.giocatore1.getGolemAttivo().scagliaPietra();
         Elemento.TipoElemento pietraG2 = this.giocatore2.getGolemAttivo().scagliaPietra();
         int danno = this.equilibrio.getDannoSubito(pietraG1.toString(), pietraG2.toString());
+        IOStream.mostraTestataBattaglia(giocatore1, giocatore2);
         IOStream.mostraDanni(this.giocatore1.getNome(), this.giocatore2.getNome(), pietraG1.toString(), pietraG2.toString(), danno);
         if(danno > 0) {
             if(!this.giocatore2.getGolemAttivo().subisciDanno(danno)) {
@@ -75,6 +82,8 @@ public class Partita {
                 IOStream.mostraGolemMorto(giocatore1.getNome());
             }
         }
+        this.nIterazioni ++;
+        IOStream.pausaDiSistema();
     }
 
     /**
@@ -85,6 +94,7 @@ public class Partita {
         Queue<Elemento.TipoElemento> pietre = IOStream.caricaSlotPietre(this.sacchetto, this.equilibrio.getNumElementiUsati(), this.nPietre, giocatore.getNome());
         Tamagolem golem = new Tamagolem(pietre);
         giocatore.setGolemAttivo(golem);
+        IOStream.pausaDiSistema();
     }
 
     /**
@@ -102,7 +112,46 @@ public class Partita {
         }
         return false;
     }
-    	
     
+    
+    //parte di codice dedicata all resetting in caso di pareggio iifinito
+    /**
+     * confronta se i due giocatori hanno messo le stesse pietre nello stesso ordine
+     * @return true se hanno messo le stesse pietre nello stesso ordine, false altrimenti
+     */
+    private boolean pariInserimentiSlotTamagolem() {
+    	Elemento.TipoElemento slotDiG1, slotDiG2;
+    	boolean pariInserimento = true;
+    	for (int i = 0; i<this.nPietre; i++) { //estrae a due a due gli elementi, li confronta, e poi li rimette in fondo in modo da avere alla fine le stesse queue che si avevano all'inizio del confronto
+    		slotDiG1 = this.giocatore1.getGolemAttivo().getPietre().poll();
+    		slotDiG2 = this.giocatore2.getGolemAttivo().getPietre().poll();
+    		if (slotDiG1.compareTo(slotDiG2) != 0) pariInserimento = false; //passa ogni elemnto dei due slot in rassegna e li confronta, se almeno una coppia presenta elementi diversi il compare non darà 0 e i due inserimenti saranno diversi
+    		this.giocatore1.getGolemAttivo().getPietre().add(slotDiG1);
+    		this.giocatore2.getGolemAttivo().getPietre().add(slotDiG2);
+    	} 
+    	return pariInserimento;
+    }
+    
+    private void reimmissioneNelSacchetto() {
+    	Elemento.TipoElemento elementoEstratto = this.giocatore2.getGolemAttivo().getPietre().poll(); //estrare dallo slot di G2 l'ultimo elemento
+    	for (int i=0; i<this.equilibrio.getNumElementiUsati(); i++) {
+    		if (this.sacchetto.get(i).getTipoSacchetto().compareTo(elementoEstratto) == 0) { //confronta gli enum del sacchetto fino a trovare la corrispondenza fra tipi di elementi
+    			this.sacchetto.get(i).aumentaQuantità(); //lo rimette nel sacchetto
+    		}
+    	}
+    }
+    
+    /**
+     * avvisa che l'utente ha inserito a inizo partita le stesse pietre dell'altro, e glie le fa reinserire
+     */
+    private void evitaPareggioInfinito () {
+    	do {
+    		IOStream.avvertiPareggioInfinito();
+    		for (int i=0; i < this.nPietre; i++) {
+    			this.reimmissioneNelSacchetto(); //fa il contrario di IOStream caricaSlotPietre, rimuove le pietre dallo slot di G2 e le rimette nel sacchetto
+    		}
+    		this.giocatore2.getGolemAttivo().resetPietre(IOStream.caricaSlotPietre(this.sacchetto, this.equilibrio.getNumElementiUsati(), this.nPietre, this.giocatore2.getNome())); //richiede all'utente di riempire lo slot nuovamente e lo ripassa al golem
+    	} while(this.pariInserimentiSlotTamagolem()); //nel caso sia particolarmente testardo e di nuovo ri immete la stessa sequenza di prima
+    }
 }
 

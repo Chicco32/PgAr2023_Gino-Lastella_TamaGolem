@@ -12,7 +12,19 @@ public class Tamagolem {
         this.pietre = pietre;
         this.vita = VITA_MAX;
     }
+    
+    public int getVita() {
+    	return this.vita;
+    }
 
+    public Queue<Elemento.TipoElemento> getPietre() {
+    	return this.pietre;
+    }
+    
+    public void resetPietre(Queue<Elemento.TipoElemento> pietre) {
+    	this.pietre = pietre;
+    }
+    
     /**
      * Scaglia la pietra in fondo alla coda e la rimette all'inizio.
      * @return la pietra che viene scagliata

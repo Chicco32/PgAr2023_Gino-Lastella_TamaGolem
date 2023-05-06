@@ -21,6 +21,10 @@ public class Coppia {
 			this.quantita--;
 		} 
 		
+		public void aumentaQuantità() {
+			this.quantita++;
+		}
+		
 		public String toString() {
 			StringBuffer str = new StringBuffer();
 			str.append("\nTipo di Elemento: ");

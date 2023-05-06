@@ -5,9 +5,13 @@ public class MainGolem {
 
 	public static void main(String[] args) {
 		boolean soddisfatto = false;
+		String nomeG1,nomeG2;
 		IOStream.mostraBenvenuto();
-		String nomeG1 = IOStream.chiediNome(1);
-		String nomeG2 =IOStream.chiediNome(2);
+		nomeG1 = IOStream.chiediNome(1);
+		do {
+			nomeG2 =IOStream.chiediNome(2);
+			if (nomeG2.equalsIgnoreCase(nomeG1)) IOStream.avvertiStessoNome();
+		} while(nomeG2.equalsIgnoreCase(nomeG1));
 		do {
 			//prima fase dello scontro e generazione delle variabili
 			int numElementiUsati = IOStream.chiediNumeroElementi();

@@ -7,12 +7,10 @@ import java.util.Queue;
 import it.unibs.fp.mylib.InputDati;
 import it.unibs.fp.mylib.MyMenu;
 
-public class IOStream {
-	
-	//mostrare golem rimasti in gioco, mostare vita dei golem attivi, fare una pausa fra un attacco e l'altro 
+public class IOStream { 
 	
 	public static int chiediNumeroElementi () {
-		return InputDati.leggiIntero("Con quanti elementi volete giocare?", 3, 10);
+		return InputDati.leggiIntero("Con quanti elementi volete giocare? Potete scegliere fra 3 e 10", 3, 10);
 	}
 	
 	public static String chiediNome (int ngiocatore) {
@@ -27,8 +25,25 @@ public class IOStream {
 		System.out.println("Benvenuti in questa nuova lotta fra golem, preparatevi perche' sara' uno scontro memorabile!");
 	}
 	
+	public static void avvertiPareggioInfinito () {
+		System.out.println("Giocatore attento! Se metti una combinazione uguale al tuo avversario i golem si annichileranno all'infinito! Prova una combinazione diversa!");
+	}
+	
+	public static void avvertiStessoNome () {
+		System.out.println("\nNon puoi chimarti come il tuo avversario! Scegli un altro nome.");
+	}
 	public static void mostraGolemMorto (String nomeGiocatore) {
 		System.out.println(String.format("\n%s il tuo golem e' morto!",nomeGiocatore));
+	}
+	
+	public static void mostraTestataBattaglia(Giocatore G1, Giocatore G2) {
+		System.out.println(String.format("\tGiocatore 1: %d PS \t\t\t Giocatore 2: %d PS", G1.getGolemAttivo().getVita(), G2.getGolemAttivo().getVita()));
+		System.out.println(String.format(String.format("\tGolems: %d \t\t\t\t Golems: %d", G1.getnGolem(), G2.getnGolem())));
+	}
+	
+	public static void pausaDiSistema() {
+		System.out.println("Premi il tasto invio per continuare");
+		String nextLine = new java.util.Scanner(System.in).nextLine();
 	}
 	
 	public static void inserimentoInvalido() {
@@ -89,12 +104,12 @@ public class IOStream {
 		//mostra le pietre disponibili all'utente
 		System.out.println(String.format("%s Ecco le pietre che puoi caricare", nomeGiocatore));
 		for (int i= 0; i < pietrePerGolem; i++) {
-			System.out.println(String.format("Pietre Disponibili (%d)", pietrePerGolem - i));
+			System.out.println(String.format("Pietre Disponibili (%d)", pietrePerGolem - i)); //mostra quante pietre ha ancora da caricare
 			IOStream.mostraSacchetto(sacchetto);
 			System.out.println("\n");
 			boolean valido = false;
 			do {
-				nomeElemento = InputDati.leggiStringaNonVuota("Inserisci il nome dell'elemento");
+				nomeElemento = InputDati.leggiStringaNonVuota("Inserisci il nome dell'elemento: ");
 				//normalizzazione a prima lettera maiuscola
 				String iniziale = nomeElemento.substring(0,1).toUpperCase(); //setta la prima lettera maiscola
 				String corpo = nomeElemento.substring(1).toLowerCase(); //setta il corpo minuscolo
@@ -108,6 +123,7 @@ public class IOStream {
 			nuovoSlot.add(Elemento.TipoElemento.valueOf(nomeElemento));
 			sacchetto.get(Elemento.indiceElemento(nomeElemento)).diminuisciQuantita();
 		}
+		//System.out.print("\033[H\033[2J"); evocazione demoniaca che pulisce lo schermo
 		return nuovoSlot;
 	}
 	
