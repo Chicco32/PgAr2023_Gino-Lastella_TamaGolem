@@ -12,7 +12,6 @@ public class Elemento {
 	 * @return l'indice dell'elemento se esiste, altrimenti il numero massimo di elementi ad indicare che quel nome non è nell'enum
 	 */
 	public static int indiceElemento(String nomeElemento) {
-		nomeElemento.toUpperCase();
 		for (int i=0; i<Elemento.NUM_MAX_ELEMENTI; i++) {
 			if (ListaDiTipi[i].equalsIgnoreCase(nomeElemento)) return i; 
 		}

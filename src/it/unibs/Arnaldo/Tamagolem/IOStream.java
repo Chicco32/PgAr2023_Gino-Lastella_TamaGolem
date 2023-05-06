@@ -9,7 +9,7 @@ import it.unibs.fp.mylib.MyMenu;
 
 public class IOStream {
 	
-	//mostrare golem rimasti in gioco, mostare vita dei golem attivi e numero di pietre ancora da caricare nel golem, fare una pausa fra un attacco e l'altro 
+	//mostrare golem rimasti in gioco, mostare vita dei golem attivi, fare una pausa fra un attacco e l'altro 
 	
 	public static int chiediNumeroElementi () {
 		return InputDati.leggiIntero("Con quanti elementi volete giocare?", 3, 10);
@@ -32,7 +32,7 @@ public class IOStream {
 	}
 	
 	public static void inserimentoInvalido() {
-		System.out.println("Spiacenti, l'inserimento dato non è valido");
+		System.out.println("Spiacenti, l'inserimento dato non e' valido");
 	}
 	
 	/**
@@ -86,18 +86,25 @@ public class IOStream {
 	public static Queue<Elemento.TipoElemento> caricaSlotPietre (List<Coppia> sacchetto, int nElementi, int pietrePerGolem, String nomeGiocatore) {
 		Queue<Elemento.TipoElemento> nuovoSlot = new ArrayDeque<>();
 		String nomeElemento;
+		//mostra le pietre disponibili all'utente
 		System.out.println(String.format("%s Ecco le pietre che puoi caricare", nomeGiocatore));
 		for (int i= 0; i < pietrePerGolem; i++) {
-			System.out.println("Pietre Disponibili:");
+			System.out.println(String.format("Pietre Disponibili (%d)", pietrePerGolem - i));
 			IOStream.mostraSacchetto(sacchetto);
 			System.out.println("\n");
 			boolean valido = false;
 			do {
 				nomeElemento = InputDati.leggiStringaNonVuota("Inserisci il nome dell'elemento");
+				//normalizzazione a prima lettera maiuscola
+				String iniziale = nomeElemento.substring(0,1).toUpperCase(); //setta la prima lettera maiscola
+				String corpo = nomeElemento.substring(1).toLowerCase(); //setta il corpo minuscolo
+				nomeElemento = iniziale + corpo; //ricompone la parola
+				//controllo della validità dell'inserimento
 				if (Elemento.indiceElemento(nomeElemento) >= nElementi) IOStream.inserimentoInvalido(); // se mette un elemento che è oltre quelli disponibili (tipo magia con 3 elementi) o sbaglia a scrivere lo scarta
 				else if (sacchetto.get(Elemento.indiceElemento(nomeElemento)).getQuantita() == 0) IOStream.inserimentoInvalido(); // se mette un elemento tra quelli disponibili ma la cui quantità è zero va scartato (son finite le pietre)
 				else valido = true;
 			} while (!valido);
+			//aggiunta allo slot golem e rimozione dal sacchetto
 			nuovoSlot.add(Elemento.TipoElemento.valueOf(nomeElemento));
 			sacchetto.get(Elemento.indiceElemento(nomeElemento)).diminuisciQuantita();
 		}

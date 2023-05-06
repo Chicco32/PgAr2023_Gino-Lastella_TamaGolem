@@ -70,7 +70,7 @@ public class Partita {
             }
         }
         else if(danno < 0) {
-            if(!this.giocatore1.getGolemAttivo().subisciDanno(danno)) {
+            if(!this.giocatore1.getGolemAttivo().subisciDanno(-danno)) {
                 giocatore1.uccidiGolem();
                 IOStream.mostraGolemMorto(giocatore1.getNome());
             }
