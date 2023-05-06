@@ -60,10 +60,11 @@ public class Partita {
     public void scontro() {
         if(this.giocatore1.getGolemAttivo() == null) {
             this.creaGolem(giocatore1);
+            if(this.nIterazioni > 0 && this.pariInserimentiSlotTamagolem()) this.evitaPareggioInfinito(); //dalla seconda evocazione in poi controlla che anche G1 non ricarda nel loop infinito
         }
         if(this.giocatore2.getGolemAttivo() == null) {
             this.creaGolem(giocatore2);
-            if(this.nIterazioni == 0 && this.pariInserimentiSlotTamagolem()) this.evitaPareggioInfinito(); //controlla che la partita non cada in un loop infinto di pareggi
+            if(this.pariInserimentiSlotTamagolem()) this.evitaPareggioInfinito(); //controlla che la partita non cada in un loop infinto di pareggi
         }
         Elemento.TipoElemento pietraG1 = this.giocatore1.getGolemAttivo().scagliaPietra();
         Elemento.TipoElemento pietraG2 = this.giocatore2.getGolemAttivo().scagliaPietra();
